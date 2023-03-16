@@ -6,6 +6,7 @@ import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
   const ref = useRef<any>();
+  const iframe = useRef<any>();
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
 
@@ -31,12 +32,6 @@ const App = () => {
       return;
     }
 
-    //transpiling the code
-    // const result = await ref.current.transform(input, {
-    //   loader: "jsx",
-    //   target: "es2015",
-    // });
-
     const result = await ref.current.build({
       entryPoints: ["index.js"],
       bundle: true,
@@ -48,12 +43,24 @@ const App = () => {
       },
     });
 
-    //set the transformed code
-    // setCode(result.code);
-    setCode(result.outputFiles[0].text);
+    //send message to child using postMessage
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, "*");
   };
 
-  const html = `<script>${code}</script>`;
+  //create an html file with eventlistener
+  const html = `
+  <html>
+    <head></head>
+    <body>
+      <div id="root"></div>
+      <script>
+        window.addEventListener('message', (event) => {
+          eval(event.data);
+        }, false);
+      </script>
+    </body>
+  </html>
+`;
 
   return (
     <div>
@@ -62,7 +69,7 @@ const App = () => {
         <button onClick={submitHandler}>Submit</button>
       </div>
       <pre>{code}</pre>
-      <iframe sandbox="allow-scripts" srcDoc={html} />
+      <iframe ref={iframe} sandbox="allow-scripts" srcDoc={html} />
     </div>
   );
 };
