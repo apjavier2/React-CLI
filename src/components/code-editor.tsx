@@ -1,4 +1,4 @@
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor, { EditorDidMount } from "@monaco-editor/react";
 
 interface CodeEditorProps {
   initialValue: string;
@@ -8,7 +8,7 @@ interface CodeEditorProps {
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   //first argument: function that gets the value inside the codeEditor
   //second arg: direct reference to the editor
-  const onEditorDidMount = (getValue: () => string, monacoEditor: any) => {
+  const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
     monacoEditor.onDidChangeModelContent(() => {
       onChange(getValue());
     });
