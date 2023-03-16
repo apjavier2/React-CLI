@@ -32,9 +32,28 @@ export const fetchPlugin = (inputCode: string) => {
 
         const { data, request } = await axios.get(args.path);
 
+        //This identifies if it is a jsx or css file
+        const fileType = args.path.match(/.css$/) ? "css" : "jsx";
+
+        //This will remove all the new lines and escaped double and single quotes
+        const escaped = data
+          .replace(/\n/g, "")
+          .replace(/"/g, '\\"')
+          .replace(/'/g, "\\'");
+
+        //wrapping the css content with JS
+        const contents =
+          fileType === "css"
+            ? `
+            const style = document.createElement('style');
+            style.innerText = '${escaped}';
+            document.head.appendChild(style);
+          `
+            : data;
+
         const result: esbuild.OnLoadResult = {
           loader: "jsx",
-          contents: data,
+          contents,
           //resolveDir returns the path of the last loaded file
           resolveDir: new URL("./", request.responseURL).pathname,
         };
