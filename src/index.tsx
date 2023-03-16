@@ -13,7 +13,7 @@ const App = () => {
     //initialization: this allows us to access the service in any part of our code
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: "/esbuild.wasm",
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm",
     });
   };
 
