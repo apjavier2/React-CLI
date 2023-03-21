@@ -2,7 +2,9 @@ import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { Cell } from "../cells";
 import produce from "immer";
-/* Immer package allows us to edit the current state without having to use spread operators or object cloning.
+/* 
+https://immerjs.github.io/immer/
+Immer package allows us to edit the current state without having to use spread operators or object cloning.
 It will also automatically update the state, so no need to return a new state
 */
 
@@ -33,6 +35,14 @@ const reducer = produce(
         return;
 
       case ActionType.DELETE_CELL:
+        //delete in data
+        delete state.data[action.payload];
+
+        //delete in order
+        state.order.filter((id) => id !== action.payload);
+
+        return;
+
         return state;
       case ActionType.MOVE_CELL:
         return state;
