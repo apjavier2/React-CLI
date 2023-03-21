@@ -21,3 +21,10 @@ This creates a fakeDOM, acts as an overlay when user is dragging or resizing
   left: 0;
   opacity: 0;
 }
+
+.preview-error {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+}
