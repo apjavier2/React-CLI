@@ -7,3 +7,7 @@ This overrides the conflict in bulma css and MDEditor title class
   font-size: unset;
   font-weight: unset;
 }
+
+.w-md-editor ul {
+  line-height: 1;
+}
