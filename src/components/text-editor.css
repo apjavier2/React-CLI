@@ -1,7 +1,8 @@
 /*
 This overrides the conflict in bulma css and MDEditor title class
 */
-w-md-editor .title {
+
+.w-md-editor .title {
   line-height: unset;
   font-size: unset;
   font-weight: unset;
