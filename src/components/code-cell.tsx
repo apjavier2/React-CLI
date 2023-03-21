@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CodeEditor from "./code-editor";
 import Preview from "./preview";
@@ -10,11 +10,18 @@ const CodeCell = () => {
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
 
-  const submitHandler = async () => {
-    //pass raw code to bundler
-    const output = await bundle(input);
-    setCode(output);
-  };
+  //debounce when user clicks. Bundle if user stopped typing for 3/4 second
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const output = await bundle(input);
+      setCode(output);
+    }, 750);
+
+    //this will be called when the user types in again
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [input]);
 
   return (
     <Resizable direction="vertical">
