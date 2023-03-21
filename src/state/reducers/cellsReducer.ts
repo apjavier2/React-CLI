@@ -1,6 +1,10 @@
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { Cell } from "../cells";
+import produce from "immer";
+/* Immer package allows us to edit the current state without having to use spread operators or object cloning.
+It will also automatically update the state, so no need to return a new state
+*/
 
 interface CellsState {
   loading: boolean;
@@ -20,32 +24,24 @@ const initialState: CellsState = {
   data: {},
 };
 
-const reducer = (
-  state: CellsState = initialState,
-  action: Action
-): CellsState => {
-  switch (action.type) {
-    case ActionType.UPDATE_CELL:
-      const { id, content } = action.payload;
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [id]: {
-            ...state.data[id],
-            content: content,
-          },
-        },
-      };
-    case ActionType.DELETE_CELL:
-      return state;
-    case ActionType.MOVE_CELL:
-      return state;
-    case ActionType.INSERT_CELL_BEFORE:
-      return state;
-    default:
-      return state;
+const reducer = produce(
+  (state: CellsState = initialState, action: Action): CellsState | void => {
+    switch (action.type) {
+      case ActionType.UPDATE_CELL:
+        const { id, content } = action.payload;
+        state.data[id].content = content;
+        return;
+
+      case ActionType.DELETE_CELL:
+        return state;
+      case ActionType.MOVE_CELL:
+        return state;
+      case ActionType.INSERT_CELL_BEFORE:
+        return state;
+      default:
+        return state;
+    }
   }
-};
+);
 
 export default reducer;
