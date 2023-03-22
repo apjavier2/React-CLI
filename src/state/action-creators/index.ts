@@ -7,7 +7,7 @@ import {
   InsertCellBeforeAction,
   Direction,
 } from "../actions";
-import { CellTypes } from "../cells";
+import { CellTypes } from "../cell";
 
 //Interfaces should be imported to specify the type of action these functions would return
 

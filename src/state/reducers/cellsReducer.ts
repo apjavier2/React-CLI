@@ -1,6 +1,6 @@
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
-import { Cell } from "../cells";
+import { Cell } from "../cell";
 import produce from "immer";
 /* 
 https://immerjs.github.io/immer/
@@ -85,7 +85,8 @@ const reducer = produce(
       default:
         return state;
     }
-  }
+  },
+  initialState
 );
 
 const randomId = () => {
