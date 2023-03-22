@@ -1,7 +1,9 @@
 .add-cell {
   position: relative;
   opacity: 0;
-  transition: opacity 0.3s;
+  /*opacity duration type-of-transition delay(before user sees transition)*/
+  transition: opacity 0.3s ease-in 0.1s;
+  margin: 10px 0;
 }
 
 .add-cell:hover {
