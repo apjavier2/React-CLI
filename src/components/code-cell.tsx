@@ -20,6 +20,24 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   //pull state from store: Get the bundle of the specific cell
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
 
+  const cumulativeCode = useTypedSelector((state) => {
+    const { data, order } = state.cells;
+    //get a list of ordered cells
+    const orderedCells = order.map((id) => data[id]);
+
+    const cumulativeCode = [];
+    for (let c of orderedCells) {
+      if (c.type === "code") {
+        cumulativeCode.push(c.content);
+      }
+      //only the previous cell codes will be added. Stop iteration in the current cell
+      if (c.id === cell.id) {
+        break;
+      }
+    }
+    return cumulativeCode;
+  });
+
   //debounce when user clicks. Bundle if user stopped typing for 3/4 second
   useEffect(() => {
     if (!bundle) {
