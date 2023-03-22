@@ -41,11 +41,11 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   //debounce when user clicks. Bundle if user stopped typing for 3/4 second
   useEffect(() => {
     if (!bundle) {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode.join("\n"));
       return;
     }
     const timer = setTimeout(async () => {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode.join("\n"));
     }, 750);
 
     //this will be called when the user types in again
@@ -53,7 +53,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       clearTimeout(timer);
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cell.content, cell.id]);
+  }, [cumulativeCode.join("\n"), cell.id]);
 
   return (
     <Resizable direction="vertical">
