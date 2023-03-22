@@ -5,11 +5,13 @@ import produce from "immer";
 
 //object that contains key:value pairs
 interface BundlesState {
-  [key: string]: {
-    loading: boolean;
-    code: string;
-    err: string;
-  };
+  [key: string]:
+    | {
+        loading: boolean;
+        code: string;
+        err: string;
+      }
+    | undefined;
 }
 
 const initialState: BundlesState = {};

@@ -1,36 +1,35 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import CodeEditor from "./code-editor";
 import Preview from "./preview";
 
-import bundle from "../bundler";
 import Resizable from "./resizable";
 import { Cell } from "../state";
 import { useActions } from "../hooks/use-actions";
+import { useTypedSelector } from "../hooks/use-typed-selector";
 
 interface CodeCellProps {
   cell: Cell;
 }
 
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
-  const [code, setCode] = useState("");
-  const [err, setErr] = useState("");
-  //Use this to update the cell inside the store
-  const { updateCell } = useActions();
+  //Use this to update the cell inside the store and run bundling
+  const { updateCell, createBundle } = useActions();
+
+  //pull state from store: Get the bundle of the specific cell
+  const bundle = useTypedSelector((state) => state.bundles[cell.id]);
 
   //debounce when user clicks. Bundle if user stopped typing for 3/4 second
   useEffect(() => {
     const timer = setTimeout(async () => {
-      const output = await bundle(cell.content);
-      setCode(output.code);
-      setErr(output.err);
+      createBundle(cell.id, cell.content);
     }, 750);
 
     //this will be called when the user types in again
     return () => {
       clearTimeout(timer);
     };
-  }, [cell.content]);
+  }, [cell.content, cell.id]);
 
   return (
     <Resizable direction="vertical">
@@ -47,7 +46,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
             onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
-        <Preview code={code} err={err} />
+        {bundle && <Preview code={bundle.code} err={bundle.err} />}
       </div>
     </Resizable>
   );
